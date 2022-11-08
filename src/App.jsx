@@ -8,8 +8,10 @@ import he from 'he';
 export default function App() {
 
   const [quizIsActive, setQuizIsActive] = React.useState(false);
+  const [endGame, setEndGame] = React.useState(false);
   const [newGame, setNewGame] = React.useState(false);
   const [questions, setQuestions] = React.useState([]);
+  const [results, setResults] = React.useState({total: 5, correct: 0});
 
   React.useEffect(() => {
   
@@ -20,7 +22,7 @@ export default function App() {
         const wrongAnswers = x.incorrect_answers.map(y => ({isCorrect: false, answer: he.decode(y), selected: false, id: nanoid(), questionId: questionId}));
         return {
           question: he.decode(x.question),
-          answers: [...wrongAnswers, {isCorrect: true, answer: he.decode(x.correct_answer), selected: false, id: nanoid(), questionId: questionId}],
+          answers: [...wrongAnswers, {isCorrect: true, answer: he.decode(x.correct_answer), selected: false, id: nanoid(), questionId: questionId}].sort(() => .5 - Math.random()),
           id: questionId
         }
       }))
@@ -59,7 +61,35 @@ export default function App() {
       }
     }
 
-    setQuestions(currentQuestions)
+    setQuestions(currentQuestions);
+    setResults(updateScore());
+
+  }
+
+  function updateScore() {
+    let totalQuestions = 0;
+    let correctAnswers = 0;
+
+    questions.forEach(question => {
+      totalQuestions++;
+      if (question.answers.filter(x => x.selected && x.isCorrect).length > 0) {
+        correctAnswers++;
+      }
+    });
+    
+    return {total: totalQuestions, correct: correctAnswers};
+  }
+
+  function checkQuiz() {
+    setEndGame(endGame => !endGame)
+    console.log(`You scored ${results.correct} / ${results.total}!`)
+  }
+
+  function startNewGame() {
+    setNewGame(newGame => !newGame);
+    setQuizIsActive(false);
+    setResults({total: 5, correct: 0});
+    setEndGame(false);
 
   }
 
@@ -73,7 +103,18 @@ export default function App() {
       ?
       <div className="quiz">
         {questionElements}
-        <button className="btn check-btn">Check answers</button>
+        
+        { endGame ? 
+          <div className="footer"> 
+            <h3>You scored {results.correct} / {results.total} correct answers.</h3> 
+              <button className="btn check-btn" onClick={startNewGame}>Play again</button> 
+          </div>
+          : 
+          <div className="footer">
+            <button className="btn check-btn" onClick={checkQuiz}>Check answers</button>
+          </div>
+        }
+      
       </div>
       :
       <div className="start-quiz">

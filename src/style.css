@@ -131,7 +131,18 @@ hr {
   z-index: 0;
 }
 
-.check-btn {
-  margin-top: 15px;
+.footer {
   align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 10px;
+  gap: 20px;
+}
+
+.footer h3 {
+  font-family: 'Inter';
+  font-size: 13px;
+  line-height: 15px;
+  text-align: center;
 }
