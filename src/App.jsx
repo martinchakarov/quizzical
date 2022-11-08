@@ -16,11 +16,12 @@ export default function App() {
     fetch('https://opentdb.com/api.php?amount=5&difficulty=medium')
       .then(res => res.json())
       .then(data => data.results.map(x => {
-        const wrongAnswers = x.incorrect_answers.map(y => ({isCorrect: false, answer: y, selected: false, id: nanoid()}));
+        const questionId = nanoid();
+        const wrongAnswers = x.incorrect_answers.map(y => ({isCorrect: false, answer: he.decode(y), selected: false, id: nanoid(), questionId: questionId}));
         return {
           question: he.decode(x.question),
-          answers: [...wrongAnswers, {isCorrect: true, answer: x.correct_answer, selected: false, id: nanoid()}],
-          id: nanoid()
+          answers: [...wrongAnswers, {isCorrect: true, answer: he.decode(x.correct_answer), selected: false, id: nanoid(), questionId: questionId}],
+          id: questionId
         }
       }))
         .then(res => setQuestions(res))
@@ -33,12 +34,30 @@ export default function App() {
         answers={x.answers} 
         key={x.id} 
         id={x.id} 
+        selectAnswer={selectAnswer}
         />
     )
   })
 
   function startQuiz() {
     setQuizIsActive(true);
+  }
+
+  function selectAnswer(e, questionId, answerId) {
+    const currentQuestions = questions.slice();
+    for (const question of currentQuestions) {
+      if (question.id === questionId) {
+        for (const answer of question.answers) {
+          if (answer.id === answerId) {
+            answer.selected = !answer.selected
+            console.log(currentQuestions)
+          }
+        }
+      }
+    }
+
+    setQuestions(currentQuestions)
+
   }
 
   return (
