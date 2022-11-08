@@ -1,6 +1,6 @@
 export default function Answer(props) {
     const styles = {
-        backgroundColor: props.selected ? '#D6DBF5' : '#DBDEF0'
+        backgroundColor: props.selected ? '#D6DBF5' : '#F5F7FB'
     }
 
     return (

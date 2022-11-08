@@ -45,12 +45,15 @@ export default function App() {
 
   function selectAnswer(e, questionId, answerId) {
     const currentQuestions = questions.slice();
+    let targetQuestionId;
+    
     for (const question of currentQuestions) {
       if (question.id === questionId) {
         for (const answer of question.answers) {
           if (answer.id === answerId) {
-            answer.selected = !answer.selected
-            console.log(currentQuestions)
+            targetQuestionId = question.id;
+            question.answers.map(x => x.selected = false);
+            answer.selected = !answer.selected;
           }
         }
       }
