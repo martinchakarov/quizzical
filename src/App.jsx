@@ -1,9 +1,11 @@
 import React from 'react';
-import { useEffect } from 'react';
 import Blob from './components/Blob';
 import Question from './components/Question';
+import Confetti from 'react-confetti'
+import { useEffect } from 'react';
 import {nanoid} from 'nanoid';
 import he from 'he';
+
 
 export default function App() {
 
@@ -99,7 +101,7 @@ export default function App() {
     setQuizIsActive(false);
     setResults({total: 5, correct: 0});
     setEndGame(false);
-
+    setQuestions([])
   }
 
   return (
@@ -108,9 +110,29 @@ export default function App() {
         <Blob/>
         <Blob/>
       </div>
-      { quizIsActive 
+      
+      { 
+      !quizIsActive 
+
       ?
+
+      <div className="start-quiz">
+        <h1 className="title">Quizzical</h1>
+        <p className="description">Test your knowledge with some random trivia questions!</p>
+        <button className="btn" onClick={startQuiz}>Start quiz</button>
+      </div>
+
+      : !questions.length
+
+      ?
+
+      <img className="spinner" src={require('./img/loader.gif')}/>
+
+      :
+      
       <div className="quiz">
+        {endGame && results.total === results.correct && <Confetti/>}
+        
         {questionElements}
         
         { endGame ? 
@@ -123,13 +145,6 @@ export default function App() {
             <button className="btn check-btn" onClick={checkQuiz}>Check answers</button>
           </div>
         }
-      
-      </div>
-      :
-      <div className="start-quiz">
-        <h1 className="title">Quizzical</h1>
-        <p className="description">Test your knowledge with some random trivia questions!</p>
-        <button className="btn" onClick={startQuiz}>Start quiz</button>
       </div>
       }
     </div>

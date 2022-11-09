@@ -145,3 +145,9 @@ hr {
   line-height: 15px;
   text-align: center;
 }
+
+.spinner {
+  max-width: 20vw;
+  max-height: 20vh;
+  margin-top: 40vh;
+}
