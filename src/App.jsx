@@ -19,10 +19,10 @@ export default function App() {
       .then(res => res.json())
       .then(data => data.results.map(x => {
         const questionId = nanoid();
-        const wrongAnswers = x.incorrect_answers.map(y => ({isCorrect: false, answer: he.decode(y), selected: false, id: nanoid(), questionId: questionId}));
+        const wrongAnswers = x.incorrect_answers.map(y => ({isCorrect: false, answer: he.decode(y), selected: false, id: nanoid(), questionId: questionId, isChecked: false}));
         return {
           question: he.decode(x.question),
-          answers: [...wrongAnswers, {isCorrect: true, answer: he.decode(x.correct_answer), selected: false, id: nanoid(), questionId: questionId}].sort(() => .5 - Math.random()),
+          answers: [...wrongAnswers, {isCorrect: true, answer: he.decode(x.correct_answer), selected: false, id: nanoid(), questionId: questionId, isChecked: false}].sort(() => .5 - Math.random()),
           id: questionId
         }
       }))
@@ -81,6 +81,15 @@ export default function App() {
   }
 
   function checkQuiz() {
+
+    let currentQuestions = questions.slice();
+
+    for (const question of currentQuestions) {
+      for (const answer of question.answers) {
+        answer.isChecked = true;
+      }
+    }
+
     setEndGame(endGame => !endGame)
     console.log(`You scored ${results.correct} / ${results.total}!`)
   }

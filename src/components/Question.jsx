@@ -10,6 +10,7 @@ export default function Question(props) {
                     key={x.id}
                     questionId={x.questionId}
                     selectAnswer={props.selectAnswer}
+                    isChecked={x.isChecked}
                     />
     });
 
